@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body class="container">
+<h2 class="text-center">Question Answer App</h2>
+
+<div class="row">
+    <div class="col-3">
+        <div class="typeQuestion" type="button" onclick="chooseAllQuestion()">
+            <img class="mr-1" src="/img/all.png" height="30" width="30"/>
+            <strong>Tất cả</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('html')">
+            <img class="mr-1" src="/img/html.jpg" height="30" width="30"/>
+            <strong>HTML</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('CSS')">
+            <img class="mr-1" src="/img/css.png" height="30" width="30"/>
+            <strong>CSS</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('Javascript')">
+            <img class="mr-1" src="/img/js.jpg" height="30" width="30"/>
+            <strong>Javascript</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('JQuery')">
+            <img class="mr-1" src="/img/jquery.png" height="30" width="30"/>
+            <strong>JQuery</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('Angular')">
+            <img class="mr-1" src="/img/angular.jpg" height="30" width="30"/>
+            <strong>Angular</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('Java')">
+            <img class="mr-1" src="/img/java.png" height="30" width="30"/>
+            <strong>Java core</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('SQL')">
+            <img class="mr-1" src="/img/mysql.jpg" height="30" width="30"/>
+            <strong>MySQL</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('Spring Framework')">
+            <img class="mr-1" src="/img/spring.png" height="30" width="30"/>
+            <strong>Spring Framework</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('Web')">
+            <img class="mr-1" src="/img/web.jpg" height="30" width="30"/>
+            <strong>Web</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('Algorithm')">
+            <img class="mr-1" src="/img/algorithm.png" height="30" width="30"/>
+            <strong>Algorithm</strong>
+        </div>
+        <div class="typeQuestion" type="button" onclick="chooseTypeQuestion('Other')">
+            <img class="mr-1" src="/img/other.png" height="30" width="30"/>
+            <strong>Other</strong>
+        </div>
+    </div>
+    <div class="col-3">
+        <p class="ml-5">Bộ đếm thời gian <strong> 00:00 </strong></p>
+        <p class="ml-5"> Loại câu hỏi <strong id="questionType" style="color: red">...</strong></p>
+        <p class="ml-5"> Số câu hỏi <strong id="quantityQuestion">... </strong></p>
+        <button class="btn btn-primary" style="width: 200px" onclick="start()">Bắt đầu</button>
+        <div class="mt-3" id="question">
+
+        </div>
+    </div>
+    <div class="col-6">
+        <div id="detailQuestion">Câu hỏi</div>
+        <div >
+                <input id="answer"  type="text" placeholder="nhập câu trả lời.. ">
+                <button type="submit" onclick="checkAnswer()"> Check </button>
+            <div id="keywordMissing">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function chooseAllQuestion() {
+        $.ajax({
+            type: "GET",
+            url: "/api/question/all",
+            success: function (data) {
+                document.getElementById('quantityQuestion').innerText = data.length
+                document.getElementById('questionType').innerText = 'tất cả'
+            },
+            error: function (e) {
+                console.log("false")
+            }
+        });
+    }
+
+    function chooseTypeQuestion(value) {
+        $.ajax({
+            type: "GET",
+            url: "/api/question/" + value,
+            success: function (data) {
+                document.getElementById('quantityQuestion').innerText = data.length;
+                document.getElementById('questionType').innerText = data[0].questionType.questionTypeName;
+                document.getElementById('question').innerText = '';
+                document.getElementById('detailQuestion').innerText = '';
+            },
+            error: function (e) {
+                console.log("false")
+            }
+        });
+    }
+
+    function start() {
+        let value = document.getElementById('questionType').innerText
+        if (value == 'tất cả') {
+            value = 'all'
+        }
+        $.ajax({
+            type: "GET",
+            url: "/api/question/" + value,
+            success: function (data) {
+                let countQuestion = 0;
+                let x = '';
+                for (let i = 0; i < data.length; i++) {
+                    x += ' <p> <button class="btn btn-primary" onclick="getQuestion(' + i + ')" ><strong> Câu hỏi số' + (i + 1) + '</strong> </button></p>'
+                }
+                document.getElementById('question').innerHTML = x
+            },
+            error: function (e) {
+                console.log("false")
+            }
+        });
+    }
+
+    function getQuestion(number) {
+        let value = document.getElementById('questionType').innerText
+        if (value == 'tất cả') {
+            value = 'all'
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "/api/question/" + value + "/" + number,
+            success: function (data) {
+                document.getElementById('detailQuestion').innerHTML =
+                    '<p id="questionId" hidden>' + data.questionId + '</p>'+
+                    '<p>' + data.questionContent + '?' + '</p>'
+            },
+            error: function (e) {
+                console.log("false")
+            }
+        });
+    }
+    function checkAnswer(){
+        let questionId= document.getElementById('questionId').innerText;
+        let answer= document.getElementById('answer').value;
+
+        $.ajax({
+            type: "GET",
+            url: "/api/answer/" + answer + "/" + questionId,
+            success: function (data) {
+                console.log('ajax is success')
+            },
+            error: function (e) {
+                console.log("false")
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

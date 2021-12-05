@@ -1,5 +1,6 @@
 package com.question.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class Question {
 
     @Column(name = "question_content",length = 1000 )
     private String questionContent;
+    @JsonBackReference
     @OneToMany(mappedBy = "question")
     private Set<Keyword> keywordSet;
     @ManyToOne

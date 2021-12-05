@@ -1,4 +1,4 @@
-package com.question.controller;
+package com.question.restcontroller;
 
 
 import com.question.model.Student;

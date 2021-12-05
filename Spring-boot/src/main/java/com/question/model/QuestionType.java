@@ -1,5 +1,6 @@
 package com.question.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class QuestionType {
     @Column(name="question_type_id")
     private Integer questionTypeId;
     private String questionTypeName;
+    @JsonBackReference
     @OneToMany(mappedBy = "questionType")
     private Set<Question> questionSet;
 }
