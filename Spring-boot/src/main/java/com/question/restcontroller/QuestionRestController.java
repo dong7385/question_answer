@@ -30,7 +30,7 @@ public class QuestionRestController {
     }
     @GetMapping("/{questionType}/{id}")
     public  ResponseEntity<List<Question>> getQuestionByQuestionTypeAndId(@PathVariable String questionType,@PathVariable Integer id){
-        Question question = new Question();
+        Question question;
        if ( "all".equals(questionType)){
            question = this.iQuestionService.findQuestionById(id);
        }else{

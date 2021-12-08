@@ -16,4 +16,9 @@ public class AnswerService implements IAnswerService {
         this.iAnswerRepository.save(answer);
     }
 
+    @Override
+    public Answer getAnswerByStudentIdAndQuestionId(Integer questionId, Integer studentId) {
+        return this.iAnswerRepository.getAnswerByStudentIdAndQuestionId(questionId, studentId);
+    }
+
 }
